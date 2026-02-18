@@ -2,12 +2,11 @@ import streamlit as st
 import requests
 import pandas as pd
 from datetime import datetime
-import os
 
 # =====================================================
-# API URL (Works Local + Production)
+# API URL
 # =====================================================
-API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000")
+API_URL = "https://hospital-patient-management-system-4.onrender.com"
 
 st.set_page_config(
     page_title="Hospital Patient Management System",
@@ -99,13 +98,13 @@ if menu == "Dashboard":
         st.error(f"Backend error: {e}")
 
 # =====================================================
-# GENERIC CRUD FUNCTION
+# GENERIC CRUD FUNCTION WITH EFFECTS
 # =====================================================
 def crud_section(title, endpoint, fields):
     st.title(title)
     tabs = st.tabs(["View All", "Get By ID", "Add", "Update", "Delete"])
 
-    # VIEW ALL
+    # ================= VIEW ALL =================
     with tabs[0]:
         res = requests.get(f"{API_URL}/{endpoint}")
         if res.ok:
@@ -113,7 +112,7 @@ def crud_section(title, endpoint, fields):
         else:
             st.error(res.text)
 
-    # GET BY ID
+    # ================= GET BY ID =================
     with tabs[1]:
         item_id = st.number_input("Enter ID", min_value=1, key=f"get_{endpoint}")
         if st.button("Fetch", key=f"fetch_{endpoint}"):
@@ -121,10 +120,12 @@ def crud_section(title, endpoint, fields):
             if res.ok:
                 st.success("Record Found ✅")
                 st.json(res.json())
+                st.balloons()
+                st.stop()
             else:
                 st.error(res.text)
 
-    # ADD
+    # ================= ADD =================
     with tabs[2]:
         payload = {}
 
@@ -147,9 +148,14 @@ def crud_section(title, endpoint, fields):
 
         if st.button("Add", key=f"add_btn_{endpoint}"):
             res = requests.post(f"{API_URL}/{endpoint}", json=payload)
-            st.success(res.text if res.ok else res.text)
+            if res.ok:
+                st.success("Added Successfully 🎉")
+                st.balloons()
+                st.stop()
+            else:
+                st.error(res.text)
 
-    # UPDATE
+    # ================= UPDATE =================
     with tabs[3]:
         item_id = st.number_input("ID to Update", min_value=1, key=f"update_id_{endpoint}")
         payload = {}
@@ -173,23 +179,35 @@ def crud_section(title, endpoint, fields):
 
         if st.button("Update", key=f"update_btn_{endpoint}"):
             res = requests.put(f"{API_URL}/{endpoint}/{item_id}", json=payload)
-            st.success(res.text if res.ok else res.text)
+            if res.ok:
+                st.success("Updated Successfully 🚀")
+                st.balloons()
+                st.stop()
+            else:
+                st.error(res.text)
 
-    # DELETE
+    # ================= DELETE =================
     with tabs[4]:
         item_id = st.number_input("ID to Delete", min_value=1, key=f"delete_{endpoint}")
         if st.button("Delete", key=f"delete_btn_{endpoint}"):
             res = requests.delete(f"{API_URL}/{endpoint}/{item_id}")
-            st.success(res.text if res.ok else res.text)
+            if res.ok:
+                st.success("Deleted Successfully ❄")
+                st.snow()
+                st.stop()
+            else:
+                st.error(res.text)
 
 # =====================================================
 # PAGES
 # =====================================================
 if menu == "Patients":
-    crud_section("👨‍⚕ Patients Management", "patients", ["name", "age", "gender", "phone", "address", "problem"])
+    crud_section("👨‍⚕ Patients Management", "patients",
+                 ["name", "age", "gender", "phone", "address", "problem"])
 
 if menu == "Doctors":
-    crud_section("👩‍⚕ Doctors Management", "doctors", ["name", "specialization", "phone"])
+    crud_section("👩‍⚕ Doctors Management", "doctors",
+                 ["name", "specialization", "phone"])
 
 if menu == "Appointments":
     crud_section("📅 Appointments Management", "appointments",
