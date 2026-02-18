@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Time
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-Base = declarative_base()
+from database import Base
 
 # ---------------- PATIENT TABLE ----------------
 class Patient(Base):
@@ -14,9 +12,9 @@ class Patient(Base):
     gender = Column(String)
     phone = Column(String)
     address = Column(String)
-    problem=Column(String)
+    problem = Column(String)
 
-    appointments = relationship("Appointment", back_populates="patient")
+    appointments = relationship("Appointment", back_populates="patient", cascade="all, delete")
 
 
 # ---------------- DOCTOR TABLE ----------------
@@ -28,7 +26,7 @@ class Doctor(Base):
     specialization = Column(String)
     phone = Column(String)
 
-    appointments = relationship("Appointment", back_populates="doctor")
+    appointments = relationship("Appointment", back_populates="doctor", cascade="all, delete")
 
 
 # ---------------- APPOINTMENT TABLE ----------------
@@ -40,8 +38,8 @@ class Appointment(Base):
     appointment_time = Column(Time)
     status = Column(String)
 
-    patient_id = Column(Integer, ForeignKey("patients.id"))
-    doctor_id = Column(Integer, ForeignKey("doctors.id"))
+    patient_id = Column(Integer, ForeignKey("patients.id", ondelete="CASCADE"))
+    doctor_id = Column(Integer, ForeignKey("doctors.id", ondelete="CASCADE"))
 
     patient = relationship("Patient", back_populates="appointments")
     doctor = relationship("Doctor", back_populates="appointments")

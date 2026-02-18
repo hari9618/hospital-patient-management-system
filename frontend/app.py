@@ -2,8 +2,12 @@ import streamlit as st
 import requests
 import pandas as pd
 from datetime import datetime
+import os
 
-API_URL = "http://127.0.0.1:8000"
+# =====================================================
+# API URL (Works Local + Production)
+# =====================================================
+API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(
     page_title="Hospital Patient Management System",
@@ -91,8 +95,8 @@ if menu == "Dashboard":
             </div>
             """, unsafe_allow_html=True)
 
-    except:
-        st.error("Backend not running")
+    except Exception as e:
+        st.error(f"Backend error: {e}")
 
 # =====================================================
 # GENERIC CRUD FUNCTION
@@ -107,7 +111,7 @@ def crud_section(title, endpoint, fields):
         if res.ok:
             st.dataframe(pd.DataFrame(res.json()), use_container_width=True)
         else:
-            st.error("Error fetching data")
+            st.error(res.text)
 
     # GET BY ID
     with tabs[1]:
@@ -115,11 +119,10 @@ def crud_section(title, endpoint, fields):
         if st.button("Fetch", key=f"fetch_{endpoint}"):
             res = requests.get(f"{API_URL}/{endpoint}/{item_id}")
             if res.ok:
-                data = res.json()
                 st.success("Record Found ✅")
-                st.json(data)
+                st.json(res.json())
             else:
-                st.error("Not Found ❌")
+                st.error(res.text)
 
     # ADD
     with tabs[2]:
@@ -134,23 +137,17 @@ def crud_section(title, endpoint, fields):
                 payload[field] = st.selectbox(field.capitalize(), options, key=f"add_{endpoint}_{field}")
 
             elif field == "appointment_date":
-                date_val = st.date_input("Appointment Date")
-                payload[field] = date_val.strftime("%Y-%m-%d")
+                payload[field] = st.date_input("Appointment Date").strftime("%Y-%m-%d")
 
             elif field == "appointment_time":
-                time_val = st.time_input("Appointment Time")
-                payload[field] = time_val.strftime("%H:%M:%S")
+                payload[field] = st.time_input("Appointment Time").strftime("%H:%M:%S")
 
             else:
                 payload[field] = st.text_input(field.capitalize(), key=f"add_{endpoint}_{field}")
 
         if st.button("Add", key=f"add_btn_{endpoint}"):
             res = requests.post(f"{API_URL}/{endpoint}", json=payload)
-            if res.ok:
-                st.success("Added Successfully 🎉")
-                st.balloons()
-            else:
-                st.error(res.text)
+            st.success(res.text if res.ok else res.text)
 
     # UPDATE
     with tabs[3]:
@@ -166,61 +163,34 @@ def crud_section(title, endpoint, fields):
                 payload[field] = st.selectbox(f"New {field.capitalize()}", options, key=f"update_{endpoint}_{field}")
 
             elif field == "appointment_date":
-                date_val = st.date_input("New Appointment Date")
-                payload[field] = date_val.strftime("%Y-%m-%d")
+                payload[field] = st.date_input("New Appointment Date").strftime("%Y-%m-%d")
 
             elif field == "appointment_time":
-                time_val = st.time_input("New Appointment Time")
-                payload[field] = time_val.strftime("%H:%M:%S")
+                payload[field] = st.time_input("New Appointment Time").strftime("%H:%M:%S")
 
             else:
                 payload[field] = st.text_input(f"New {field.capitalize()}", key=f"update_{endpoint}_{field}")
 
         if st.button("Update", key=f"update_btn_{endpoint}"):
             res = requests.put(f"{API_URL}/{endpoint}/{item_id}", json=payload)
-            if res.ok:
-                st.success("Updated Successfully 🚀")
-                st.balloons()
-            else:
-                st.error(res.text)
+            st.success(res.text if res.ok else res.text)
 
     # DELETE
     with tabs[4]:
         item_id = st.number_input("ID to Delete", min_value=1, key=f"delete_{endpoint}")
         if st.button("Delete", key=f"delete_btn_{endpoint}"):
             res = requests.delete(f"{API_URL}/{endpoint}/{item_id}")
-            if res.ok:
-                st.success("Deleted Successfully ❄")
-                st.snow()
-            else:
-                st.error(res.text)
+            st.success(res.text if res.ok else res.text)
 
 # =====================================================
-# PATIENTS
+# PAGES
 # =====================================================
 if menu == "Patients":
-    crud_section(
-        "👨‍⚕ Patients Management",
-        "patients",
-        ["name", "age", "gender", "phone", "address", "problem"]
-    )
+    crud_section("👨‍⚕ Patients Management", "patients", ["name", "age", "gender", "phone", "address", "problem"])
 
-# =====================================================
-# DOCTORS
-# =====================================================
 if menu == "Doctors":
-    crud_section(
-        "👩‍⚕ Doctors Management",
-        "doctors",
-        ["name", "specialization", "phone"]
-    )
+    crud_section("👩‍⚕ Doctors Management", "doctors", ["name", "specialization", "phone"])
 
-# =====================================================
-# APPOINTMENTS
-# =====================================================
 if menu == "Appointments":
-    crud_section(
-        "📅 Appointments Management",
-        "appointments",
-        ["patient_id", "doctor_id", "appointment_date", "appointment_time", "status"]
-    )
+    crud_section("📅 Appointments Management", "appointments",
+                 ["patient_id", "doctor_id", "appointment_date", "appointment_time", "status"])
