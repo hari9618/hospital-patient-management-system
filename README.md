@@ -61,7 +61,7 @@ This system allows managing **Patients, Doctors, and Appointments** with a **liv
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/Hospital-Patient-Management-System.git
+   git clone https://github.com/hari9618/hospital-patient-management-system.git
    cd Hospital-Patient-Management-System
 2️⃣ Backend Setup: 
            '''bash
