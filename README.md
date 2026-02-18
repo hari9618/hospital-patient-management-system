@@ -7,7 +7,7 @@ This system allows managing **Patients, Doctors, and Appointments** with a **liv
 
 ## 🔗 Live Links
 
-- **Frontend UI (Streamlit):** [Open Streamlit App]https:(//hospital-patient-management-system-l928zbdcygfcniaowcz9pn.streamlit.app/)
+- **Frontend UI (Streamlit):** [Open Streamlit App](https://hospital-patient-management-system-l928zbdcygfcniaowcz9pn.streamlit.app/)
 - **Backend API (FastAPI):** [Open API on Render](https://hospital-patient-management-system-4.onrender.com)  
 - **Database (PostgreSQL):** Hosted on cloud (managed by Render)
 
