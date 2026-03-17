@@ -36,12 +36,16 @@ This system allows managing **Patients, Doctors, and Appointments** with a **liv
 
 ## 📸 Screenshots
 
-![Dashboard](<img width="956" height="434" alt="dashboard" src="https://github.com/user-attachments/assets/f17ca91d-830d-4215-a2cc-e9e54e9096f6" />)  
-![Patients](<img width="959" height="435" alt="patients" src="https://github.com/user-attachments/assets/46603605-6149-4527-8e91-c967ca8815e2" />
+![Dashboard]
+(<img width="956" height="434" alt="dashboard" src="https://github.com/user-attachments/assets/f17ca91d-830d-4215-a2cc-e9e54e9096f6" />)  
+![Patients]
+(<img width="959" height="435" alt="patients" src="https://github.com/user-attachments/assets/46603605-6149-4527-8e91-c967ca8815e2" />
 )  
-![Doctors](<img width="959" height="437" alt="doctors" src="https://github.com/user-attachments/assets/c3838db6-f4c4-4601-8762-ed64daa29f67" />
+![Doctors]
+(<img width="959" height="437" alt="doctors" src="https://github.com/user-attachments/assets/c3838db6-f4c4-4601-8762-ed64daa29f67" />
 )  
-![Appointments](<img width="958" height="440" alt="Appointments" src="https://github.com/user-attachments/assets/5ab88095-61f7-478d-9d06-b263c4a107d0" />
+![Appointments]
+(<img width="958" height="440" alt="Appointments" src="https://github.com/user-attachments/assets/5ab88095-61f7-478d-9d06-b263c4a107d0" />
 )  
 
 ---
